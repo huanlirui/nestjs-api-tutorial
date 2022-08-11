@@ -20,6 +20,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   //请求的jwt解析后得到的值会在这里
   //   然后再注入到controller中的  req.user
   async validate(payload: { sub: number; email: string }) {
-    return payload;
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: payload.sub,
+      },
+    });
+    delete user.hash;
+    return user;
   }
 }
