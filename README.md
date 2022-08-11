@@ -1,4 +1,3 @@
-
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
@@ -34,3 +33,7 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+if jest cant find absolute path
+
+add "moduleDirectories": ["<rootDir>/../", "node_modules"] in /test/jest-e2e.json
