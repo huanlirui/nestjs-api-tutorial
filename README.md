@@ -21,6 +21,16 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+<!-- 图形化数据库工具 -->
+```
+npx prisma studio 
+```
+
+<!-- 数据库迁移 -->
+```
+npx prisma migration dev
+```
+
 ## Test
 
 ```bash
