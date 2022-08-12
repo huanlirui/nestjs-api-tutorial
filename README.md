@@ -15,7 +15,8 @@
 #### - API 客户端 : [insomnia](https://insomnia.rest/) insomnia
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-[youtube](https://youtu.be/GHTA143_b-s) learning video
+
+> 视频在这里 -> [youtube-freeCodeCamp.org-nest](https://youtu.be/GHTA143_b-s)
 
 ## Installation
 
