@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createBookmarkDto } from './dto';
 import { editBookmarkDto } from './dto';
@@ -6,27 +6,66 @@ import { editBookmarkDto } from './dto';
 @Injectable()
 export class BookmarkService {
   constructor(private prisma: PrismaService) {}
-  getBookmarks(userId: number) {
-    const bookmarks = this.prisma.bookmark.findMany({
+  async getBookmarks(userId: number) {
+    const bookmarks = await this.prisma.bookmark.findMany({
       where: { userId: userId },
     });
     return bookmarks;
   }
-  getBookmarkById(userId: number, bookmarkId: number) {
-    const bokkmark = this.prisma.bookmark.findUnique({
+  async getBookmarkById(userId: number, bookmarkId: number) {
+    const bookmarks = await this.prisma.bookmark.findFirst({
       where: {
-        // userId: userId,
+        userId: userId,
         id: bookmarkId,
       },
     });
+    return bookmarks;
   }
-  createBookmarkById(userId: number, dto: createBookmarkDto) {
-    throw new Error('Method not implemented.');
+  async createBookmarkById(userId: number, dto: createBookmarkDto) {
+    const bookmark = await this.prisma.bookmark.create({
+      data: {
+        userId: userId,
+        ...dto,
+      },
+    });
+    return bookmark;
   }
-  editBookmarkById(userId: number, dto: editBookmarkDto) {
-    throw new Error('Method not implemented.');
+  async editBookmarkById(
+    userId: number,
+    bookmarkId: number,
+    dto: editBookmarkDto,
+  ) {
+    const bookmark = await this.prisma.bookmark.findUnique({
+      where: {
+        id: bookmarkId,
+      },
+    });
+    if (!bookmark || bookmark.userId !== userId) {
+      throw new ForbiddenException('access to resource denied');
+    }
+
+    return this.prisma.bookmark.update({
+      where: {
+        id: bookmarkId,
+      },
+      data: {
+        ...dto,
+      },
+    });
   }
-  deleteBookmarkById(userId: number, bookmarkId: number) {
-    throw new Error('Method not implemented.');
+  async deleteBookmarkById(userId: number, bookmarkId: number) {
+    const bookmark = await this.prisma.bookmark.findUnique({
+      where: {
+        id: bookmarkId,
+      },
+    });
+    if (!bookmark || bookmark.userId !== userId) {
+      throw new ForbiddenException('access to resource denied');
+    }
+    return this.prisma.bookmark.delete({
+      where: {
+        id: bookmarkId,
+      },
+    });
   }
 }

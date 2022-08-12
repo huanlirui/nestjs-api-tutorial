@@ -31,8 +31,8 @@ model Bookmark {
   updatedAt DateTime @updatedAt
 
   title       String
-  link        String?
-  description String
+  link        String
+  description String?
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
