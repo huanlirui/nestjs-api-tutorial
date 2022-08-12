@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -10,16 +11,22 @@ import {
 import { User } from '@prisma/client';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { JwtGuard } from 'src/auth/guard';
+import { EditUserDto } from './dto';
+import { UserService } from './user.service';
 
 @UseGuards(JwtGuard)
 @Controller('users')
 export class UserController {
+  constructor(private userService: UserService) {}
+
   @HttpCode(HttpStatus.OK)
   @Get('me')
   getMe(@GetUser() user: User) {
     return user;
   }
 
-  @Patch()
-  editUser(@Req() req) {}
+  @Patch('edit')
+  editUser(@GetUser('id') id: number, @Body() dto: EditUserDto) {
+    return this.userService.editUser(id, dto);
+  }
 }
